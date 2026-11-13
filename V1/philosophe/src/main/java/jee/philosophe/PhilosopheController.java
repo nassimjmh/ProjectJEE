@@ -27,10 +27,6 @@ public class PhilosopheController {
         philosopheService.recupererFourchette();
     }
 
-    @GetMapping("/etat")
-    public String getEtat() {
-        return "Le philosophe " + philosopherId + " est actuellement : " + philosopheService.getEtatActuel();
-    }
 
     @PostMapping("/demarrer")
     public String demarrerCycle() {

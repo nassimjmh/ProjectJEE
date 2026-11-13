@@ -81,7 +81,6 @@ public class PhilosopheService {
         System.out.println("[PHILOSOPHE " + philosopherId + "] État actuel : " + etatActuel);
     }
 
-
     private String getUrlVoisinDroite() {
         int idVoisinDroite = (philosopherId % 5) + 1;
         return "http://localhost:" + (8080 + idVoisinDroite) + "/philosophe";
@@ -147,6 +146,5 @@ public class PhilosopheService {
             }
         }).start();
     }
-
-
+    
 }
