@@ -11,6 +11,7 @@
     <modules>
 
         <module>V1/philosophe</module>
+        <module>V1/monitor-service</module>
 
     </modules>
 </project>
