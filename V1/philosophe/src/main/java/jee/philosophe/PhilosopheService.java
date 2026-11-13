@@ -36,11 +36,6 @@ public class PhilosopheService {
         System.out.println("[PHILOSOPHE " + philosopherId + "] Ma fourchette a été rendue.");
     }
 
-    public String getEtatActuel() {
-        return etatActuel;
-    }
-
-
     public void executerCyclePhilosophe() {
         int repasManges = 0;
         int maxRepas = 3;
@@ -146,5 +141,5 @@ public class PhilosopheService {
             }
         }).start();
     }
-    
+
 }
