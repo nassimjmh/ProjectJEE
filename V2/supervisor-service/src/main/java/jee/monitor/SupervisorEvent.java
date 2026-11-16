@@ -3,8 +3,6 @@ package jee.monitor;
 
 public class SupervisorEvent {
     private int philosopherId;
-    private String state;
-    private int logicalClock;
 
     public SupervisorEvent(int philosopherId) {
         this.philosopherId = philosopherId;

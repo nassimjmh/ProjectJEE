@@ -21,6 +21,8 @@ public class SupervisorController {
     public synchronized boolean takeFork(@PathVariable int forkId, @RequestParam int philosopherId) {
         if (forks.containsKey(forkId) && forks.get(forkId) == null) {
             forks.put(forkId, philosopherId);
+            System.out.println("Philosophe: " + philosopherId
+                    + " took Fork: " + forkId);
             return true;
         }
         return false;
@@ -30,6 +32,8 @@ public class SupervisorController {
     public synchronized void releaseFork(@PathVariable int forkId, @RequestParam int philosopherId) {
         if (forks.containsKey(forkId) && forks.get(forkId).equals(philosopherId)) {
             forks.put(forkId, null);
+            System.out.println("Philosophe: " + philosopherId
+                    + " release Fork: " + forkId);
         }
     }
 }

@@ -13,7 +13,6 @@ public class MonitorController {
     @PostMapping("/event")
     public void receiveEvent(@RequestBody Event event) {
         history.add(event);
-        // Optionnel : Trier l'historique par horloge logique ou afficher l'événement
         System.out.println("Reçu - Philosophe: " + event.getPhilosopherId()
                 + " | État: " + event.getState()
                 + " | Horloge: " + event.getLogicalClock());
