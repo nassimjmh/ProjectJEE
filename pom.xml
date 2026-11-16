@@ -17,5 +17,9 @@
         <module>V2/monitor-service</module>
         <module>V2/supervisor-service</module>
 
+        <module>V3/philosophe</module>
+        <module>V3/monitor-service</module>
+        <module>V3/supervisor-service</module>
+
     </modules>
 </project>
