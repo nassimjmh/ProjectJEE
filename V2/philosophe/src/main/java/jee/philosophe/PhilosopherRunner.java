@@ -68,25 +68,25 @@ public class PhilosopherRunner implements CommandLineRunner {
         }
     }
 
-    private synchronized void sendSupervisorEvent() {
-
-        SupervisorEvent SupervisorEvent = new SupervisorEvent(philosopherId);
-        try {
-            restTemplate.postForObject(supervisorUrl, SupervisorEvent, Void.class);
-        } catch (Exception e) {
-            System.err.println("Impossible de joindre le monitor : " + e.getMessage());
-        }
-    }
-
-    private void eat(int fork) throws InterruptedException {
+    private void eat(int forkId) throws InterruptedException {
 
         boolean hasFork = false;
         while (!hasFork) {
-            Boolean available = restTemplate.getForObject(supervisorUrl + "/fork/" + fork + "/available", Boolean.class);
-            if (Boolean.TRUE.equals(available)) {
+
+            Boolean isAvailable = false;
+            try {
+                isAvailable = restTemplate.getForObject(
+                        supervisorUrl + "/fork/" + forkId + "/available",
+                        Boolean.class
+                );
+            } catch (Exception e) {
+                System.err.println("Superviseur injoignable, nouvelle tentative...");
+                Thread.sleep(1000);
+            }
+            if (Boolean.TRUE.equals(isAvailable)) {
                 try {
                     Boolean response = restTemplate.postForObject(
-                            supervisorUrl + "/fork/" + fork + "/take?philosopherId=" + philosopherId,
+                            supervisorUrl + "/fork/" + forkId + "/take?philosopherId=" + philosopherId,
                             null,
                             Boolean.class
                     );
@@ -101,5 +101,4 @@ public class PhilosopherRunner implements CommandLineRunner {
             }
         }
     }
-
 }
