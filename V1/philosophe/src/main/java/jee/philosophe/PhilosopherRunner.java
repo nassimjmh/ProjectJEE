@@ -14,7 +14,6 @@ public class PhilosopherRunner implements CommandLineRunner {
 
     private int logicalClock = 0;
 
-    // Injection via le constructeur
     public PhilosopherRunner(
             @Value("${philosopher.id}") int philosopherId,
             @Value("${monitor.url}") String monitorUrl,
@@ -29,18 +28,15 @@ public class PhilosopherRunner implements CommandLineRunner {
         new Thread(() -> {
             try {
                 while (true) {
-                    // 1. Penser
+
                     sendEvent("THINKING");
                     Thread.sleep((long) (Math.random() * 2000 + 1000));
 
-                    // 2. Avoir faim
                     sendEvent("HUNGRY");
 
-                    // 3. Manger
                     sendEvent("EATING");
                     Thread.sleep((long) (Math.random() * 2000 + 1000));
 
-                    // 4. Reprendre la pensée (Done)
                     sendEvent("DONE");
                 }
             } catch (InterruptedException e) {
@@ -51,7 +47,7 @@ public class PhilosopherRunner implements CommandLineRunner {
 
 
     private synchronized void sendEvent(String state) {
-        logicalClock++; // Incrémentation de l'horloge logique locale
+        logicalClock++;
         Event event = new Event(philosopherId, state, logicalClock);
         try {
             restTemplate.postForObject(monitorUrl, event, Void.class);

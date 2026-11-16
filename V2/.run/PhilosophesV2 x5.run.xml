@@ -1,11 +1,12 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="PhilosophesV2 x5" type="CompoundRunConfigurationType">
-    <toRun name="MonitorApplication (1)" type="SpringBootApplicationConfigurationType" />
+    <toRun name="MonitorApplicationV2 (1)" type="SpringBootApplicationConfigurationType" />
     <toRun name="PhilosopheApplicationV2 (1)" type="SpringBootApplicationConfigurationType" />
     <toRun name="PhilosopheApplicationV2 (2)" type="SpringBootApplicationConfigurationType" />
     <toRun name="PhilosopheApplicationV2 (3)" type="SpringBootApplicationConfigurationType" />
     <toRun name="PhilosopheApplicationV2 (4)" type="SpringBootApplicationConfigurationType" />
     <toRun name="PhilosopheApplicationV2 (5)" type="SpringBootApplicationConfigurationType" />
+    <toRun name="SupervisorApplicationV2 (1)" type="SpringBootApplicationConfigurationType" />
     <method v="2" />
   </configuration>
 </component>

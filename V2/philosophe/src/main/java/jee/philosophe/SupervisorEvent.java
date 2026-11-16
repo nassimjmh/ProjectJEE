@@ -1,12 +1,12 @@
 package jee.philosophe;
 
 
-public class EventSupervisor {
+public class SupervisorEvent {
     private int philosopherId;
     private String state;
     private int logicalClock;
 
-    public EventSupervisor(int philosopherId) {
+    public SupervisorEvent(int philosopherId) {
         this.philosopherId = philosopherId;
 
     }

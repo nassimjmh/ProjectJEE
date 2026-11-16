@@ -3,7 +3,7 @@ package jee.philosophe;
 
 public class Event {
     private int philosopherId;
-    private String state; // HUNGRY, EATING, DONE, THINKING
+    private String state;
     private int logicalClock;
 
     public Event(int philosopherId, String state, int logicalClock) {
@@ -12,7 +12,6 @@ public class Event {
         this.logicalClock = logicalClock;
     }
 
-    // Getters et Setters
     public int getPhilosopherId() { return philosopherId; }
     public void setPhilosopherId(int philosopherId) { this.philosopherId = philosopherId; }
     public String getState() { return state; }

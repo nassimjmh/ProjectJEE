@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>jee</groupId>
-    <artifactId>monitor-service</artifactId>
+    <artifactId>supervisor-serviceV2</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>monitor-service</name>
-    <description>monitor-service</description>
+    <name>supervisor-service</name>
+    <description>supervisor-service</description>
     <url/>
     <licenses>
         <license/>

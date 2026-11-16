@@ -3,24 +3,33 @@ package jee.monitor;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
-@RequestMapping("/api/monitor")
-public class MonitorController {
+@RequestMapping("/api/supervisor")
+public class SupervisorController {
 
-    private final List<Event> history = new ArrayList<>();
+    private final Map<Integer, Integer> forks = new ConcurrentHashMap<>();
 
-    @PostMapping("/event")
-    public void receiveEvent(@RequestBody Event event) {
-        history.add(event);
-        // Optionnel : Trier l'historique par horloge logique ou afficher l'événement
-        System.out.println("Reçu - Philosophe: " + event.getPhilosopherId()
-                + " | État: " + event.getState()
-                + " | Horloge: " + event.getLogicalClock());
+    @GetMapping("/fork/{forkId}/available")
+    public boolean isAvailable(@PathVariable int forkId) {
+        return forks.containsKey(forkId) && forks.get(forkId) == null;
     }
 
-    @GetMapping("/history")
-    public List<Event> getHistory() {
-        return history;
+    @PostMapping("/fork/{forkId}/take")
+    public synchronized boolean takeFork(@PathVariable int forkId, @RequestParam int philosopherId) {
+        if (forks.containsKey(forkId) && forks.get(forkId) == null) {
+            forks.put(forkId, philosopherId);
+            return true;
+        }
+        return false;
+    }
+
+    @PostMapping("/fork/{forkId}/release")
+    public synchronized void releaseFork(@PathVariable int forkId, @RequestParam int philosopherId) {
+        if (forks.containsKey(forkId) && forks.get(forkId).equals(philosopherId)) {
+            forks.put(forkId, null);
+        }
     }
 }
