@@ -1,4 +1,4 @@
-package jee.monitor;
+package jee.supervisor;
 
 
 public class SupervisorEvent {

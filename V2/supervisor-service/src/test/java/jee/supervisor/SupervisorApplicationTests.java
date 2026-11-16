@@ -1,10 +1,10 @@
-package jee.monitor;
+package jee.supervisor;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MonitorApplicationTests {
+class SupervisorApplicationTests {
 
     @Test
     void contextLoads() {

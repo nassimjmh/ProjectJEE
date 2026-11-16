@@ -3,7 +3,7 @@
     <option name="ALTERNATIVE_JRE_PATH" value="openjdk-21" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <module name="supervisor-serviceV2" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="jee.monitor.SupervisorApplication" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="jee.supervisor.SupervisorApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

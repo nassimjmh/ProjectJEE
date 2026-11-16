@@ -40,8 +40,13 @@ public class PhilosopherRunner implements CommandLineRunner {
 
                     sendEvent("HUNGRY");
 
+                    System.out.println("Gauche");
                     eat(leftFork);
+
+                    System.out.println("Droite");
                     eat(rightFork);
+
+
 
                     sendEvent("EATING");
                     Thread.sleep((long) (Math.random() * 2000 + 1000));
@@ -80,9 +85,10 @@ public class PhilosopherRunner implements CommandLineRunner {
                         Boolean.class
                 );
             } catch (Exception e) {
-                System.err.println("Superviseur injoignable, nouvelle tentative...");
+                System.err.println("Superviseur injoignable (" + e.getMessage() + "), nouvelle tentative...");
                 Thread.sleep(1000);
             }
+
             if (Boolean.TRUE.equals(isAvailable)) {
                 try {
                     Boolean response = restTemplate.postForObject(
