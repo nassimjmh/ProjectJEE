@@ -2,7 +2,7 @@
   <configuration default="false" name="PhilosopheApplicationV1 (3)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="V1" singleton="false">
     <option name="ALTERNATIVE_JRE_PATH" value="openjdk-21" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <module name="philosopheV1" />
+    <module name="philosopheV3" />
     <option name="PROGRAM_PARAMETERS" value="--philosopher.id=3 --server.port=8083" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="jee.philosophe.PhilosopheApplication" />
     <method v="2">
