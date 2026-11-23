@@ -27,7 +27,6 @@
 
         <module>V3.3/philosophe</module>
         <module>V3.3/monitor-service</module>
-        <module>V3.3/supervisor-service</module>
 
     </modules>
 </project>

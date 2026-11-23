@@ -6,7 +6,6 @@
     <toRun name="PhilosopheApplicationV3.3 (3)" type="SpringBootApplicationConfigurationType" />
     <toRun name="PhilosopheApplicationV3.3 (4)" type="SpringBootApplicationConfigurationType" />
     <toRun name="PhilosopheApplicationV3.3 (5)" type="SpringBootApplicationConfigurationType" />
-    <toRun name="SupervisorApplicationV3.3 (1)" type="SpringBootApplicationConfigurationType" />
     <method v="2" />
   </configuration>
 </component>
