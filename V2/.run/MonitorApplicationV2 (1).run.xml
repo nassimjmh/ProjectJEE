@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="MonitorApplicationV2 (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="V2" singleton="false">
-    <option name="ALTERNATIVE_JRE_PATH" value="21" />
+    <option name="ALTERNATIVE_JRE_PATH" value="openjdk-21" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <module name="monitor-serviceV2" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="jee.monitor.MonitorApplication" />

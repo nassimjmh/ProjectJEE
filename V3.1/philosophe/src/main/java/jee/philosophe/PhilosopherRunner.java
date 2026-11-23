@@ -1,0 +1,110 @@
+package jee.philosophe;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+@Component
+public class PhilosopherRunner implements CommandLineRunner {
+
+    private final int philosopherId;
+    private final String monitorUrl;
+    private final String supervisorUrl;
+    private final RestTemplate restTemplate;
+    private int logicalClock = 0;
+    private final int leftFork;
+    private final int rightFork;
+
+    public PhilosopherRunner(
+            @Value("${philosopher.id}") int philosopherId,
+            @Value("${monitor.url}") String monitorUrl,
+            @Value("${supervisor.url}") String supervisorUrl,
+            RestTemplate restTemplate) {
+        this.philosopherId = philosopherId;
+        this.monitorUrl = monitorUrl;
+        this.restTemplate = restTemplate;
+        this.supervisorUrl = supervisorUrl;
+        this.leftFork = philosopherId;
+        this.rightFork = (philosopherId % 5) + 1;
+    }
+
+    @Override
+    public void run(String... args) {
+        new Thread(() -> {
+            try {
+                while (true) {
+
+                    sendEvent("THINKING");
+                    Thread.sleep((long) (Math.random() * 2000 + 1000));
+
+                    sendEvent("HUNGRY");
+
+                    System.out.println("Gauche");
+                    eat(leftFork);
+
+                    System.out.println("Droite");
+                    eat(rightFork);
+
+
+
+                    sendEvent("EATING");
+                    Thread.sleep((long) (Math.random() * 2000 + 1000));
+
+                    // Libérer les fourchettes
+                    restTemplate.postForObject(supervisorUrl + "/fork/" + leftFork + "/release?philosopherId=" + philosopherId, null, Void.class);
+                    restTemplate.postForObject(supervisorUrl + "/fork/" + rightFork + "/release?philosopherId=" + philosopherId, null, Void.class);
+
+                    sendEvent("DONE");
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }).start();
+    }
+
+    private synchronized void sendEvent(String state) {
+        logicalClock++;
+        Event event = new Event(philosopherId, state, logicalClock);
+        try {
+            restTemplate.postForObject(monitorUrl, event, Void.class);
+        } catch (Exception e) {
+            System.err.println("Impossible de joindre le moniteur : " + e.getMessage());
+        }
+    }
+
+    private void eat(int forkId) throws InterruptedException {
+
+        boolean hasFork = false;
+        while (!hasFork) {
+
+            Boolean isAvailable = false;
+            try {
+                isAvailable = restTemplate.getForObject(
+                        supervisorUrl + "/fork/" + forkId + "/available",
+                        Boolean.class
+                );
+            } catch (Exception e) {
+                System.err.println("Superviseur injoignable (" + e.getMessage() + "), nouvelle tentative...");
+                Thread.sleep(1000);
+            }
+
+            if (Boolean.TRUE.equals(isAvailable)) {
+                try {
+                    Boolean response = restTemplate.postForObject(
+                            supervisorUrl + "/fork/" + forkId + "/take?philosopherId=" + philosopherId,
+                            null,
+                            Boolean.class
+                    );
+
+                    hasFork = (response != null && response);
+                } catch (Exception e) {
+                    System.err.println("Impossible de joindre le superviseur : " + e.getMessage());
+                }
+            }
+            if (!hasFork) {
+                Thread.sleep(100);
+            }
+        }
+    }
+}
