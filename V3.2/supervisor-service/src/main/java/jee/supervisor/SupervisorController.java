@@ -21,7 +21,7 @@ public class SupervisorController {
     }
 
     @PostMapping("/forks/take")
-    public boolean takeBothForks(
+    public synchronized boolean takeBothForks(
             @RequestParam int leftFork,
             @RequestParam int rightFork,
             @RequestParam int philosopherId) {
@@ -42,7 +42,7 @@ public class SupervisorController {
     }
 
     @PostMapping("/forks/release")
-    public void releaseBothForks(
+    public synchronized void releaseBothForks(
             @RequestParam int leftFork,
             @RequestParam int rightFork,
             @RequestParam int philosopherId) {
@@ -57,7 +57,7 @@ public class SupervisorController {
     }
 
     @PostMapping("/reset")
-    public void reset() {
+    public synchronized void reset() {
         for (int i = 1; i <= 5; i++) {
             forks.put(i, FREE);
         }
@@ -65,7 +65,7 @@ public class SupervisorController {
 
 
     @GetMapping("/state")
-    public Map<Integer, Integer> getState() {
+    public synchronized Map<Integer, Integer> getState() {
         return forks;
     }
 }

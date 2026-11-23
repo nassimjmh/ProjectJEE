@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="SupervisorApplicationV3.1 (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="V3.1" singleton="false">
+  <configuration default="false" name="SupervisorApplicationV3.2 (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="V3.2" singleton="false">
     <option name="ALTERNATIVE_JRE_PATH" value="openjdk-21" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <module name="supervisor-serviceV3.1" />
+    <module name="supervisor-serviceV3.2" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="jee.supervisor.SupervisorApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
