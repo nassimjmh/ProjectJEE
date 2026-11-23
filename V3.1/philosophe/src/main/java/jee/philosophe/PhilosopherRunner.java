@@ -40,22 +40,11 @@ public class PhilosopherRunner implements CommandLineRunner {
 
                     sendEvent("HUNGRY");
 
-                    System.out.println("Gauche");
-                    eat(leftFork);
-
-                    System.out.println("Droite");
-                    eat(rightFork);
-
-
-
-                    sendEvent("EATING");
-                    Thread.sleep((long) (Math.random() * 2000 + 1000));
-
-                    // Libérer les fourchettes
-                    restTemplate.postForObject(supervisorUrl + "/fork/" + leftFork + "/release?philosopherId=" + philosopherId, null, Void.class);
-                    restTemplate.postForObject(supervisorUrl + "/fork/" + rightFork + "/release?philosopherId=" + philosopherId, null, Void.class);
+                    eat();
 
                     sendEvent("DONE");
+
+
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -73,38 +62,39 @@ public class PhilosopherRunner implements CommandLineRunner {
         }
     }
 
-    private void eat(int forkId) throws InterruptedException {
+    private void eat() throws InterruptedException {
+        int leftFork = philosopherId;
+        int rightFork = (philosopherId % 5) + 1;
+        boolean hasBothForks = false;
 
-        boolean hasFork = false;
-        while (!hasFork) {
-
-            Boolean isAvailable = false;
+        while (!hasBothForks) {
             try {
-                isAvailable = restTemplate.getForObject(
-                        supervisorUrl + "/fork/" + forkId + "/available",
+                Boolean response = restTemplate.postForObject(
+                        supervisorUrl + "/forks/take?leftFork=" + leftFork + "&rightFork=" + rightFork + "&philosopherId=" + philosopherId,
+                        null,
                         Boolean.class
                 );
+                hasBothForks = (response != null && response);
             } catch (Exception e) {
-                System.err.println("Superviseur injoignable (" + e.getMessage() + "), nouvelle tentative...");
-                Thread.sleep(1000);
+                System.err.println("Superviseur injoignable : " + e.getMessage());
             }
 
-            if (Boolean.TRUE.equals(isAvailable)) {
-                try {
-                    Boolean response = restTemplate.postForObject(
-                            supervisorUrl + "/fork/" + forkId + "/take?philosopherId=" + philosopherId,
-                            null,
-                            Boolean.class
-                    );
-
-                    hasFork = (response != null && response);
-                } catch (Exception e) {
-                    System.err.println("Impossible de joindre le superviseur : " + e.getMessage());
-                }
-            }
-            if (!hasFork) {
+            if (!hasBothForks) {
                 Thread.sleep(100);
             }
+        }
+
+        sendEvent("EATING");
+        Thread.sleep((long) (Math.random() * 2000 + 1000));
+
+        try {
+            restTemplate.postForObject(
+                    supervisorUrl + "/forks/release?leftFork=" + leftFork + "&rightFork=" + rightFork + "&philosopherId=" + philosopherId,
+                    null,
+                    Void.class
+            );
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la libération : " + e.getMessage());
         }
     }
 }
