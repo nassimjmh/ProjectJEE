@@ -1,11 +1,9 @@
 package jee.supervisor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api/supervisor")
@@ -14,8 +12,8 @@ public class SupervisorController {
     public static final int FREE = -1;
     private final Map<Integer, Integer> forks = new HashMap<>();
 
-    public SupervisorController() {
-        for (int i = 1; i <= 5; i++) {
+    public SupervisorController(@Value("${supervisor.fork-count:5}") int forkCount) {
+        for (int i = 1; i <= forkCount; i++) {
             forks.put(i, FREE);
         }
     }

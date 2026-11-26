@@ -11,32 +11,41 @@ public class PhilosopherRunner implements CommandLineRunner {
     private final int philosopherId;
     private final String monitorUrl;
     private final String supervisorUrl;
+    private final boolean autostart;
     private final RestTemplate restTemplate;
     private int logicalClock = 0;
     private final int leftFork;
     private final int rightFork;
 
     public PhilosopherRunner(
-            @Value("${philosopher.id}") int philosopherId,
+            @Value("${philosopher.id:0}") int configuredId,
+            @Value("${server.port:8081}") int serverPort,
+            @Value("${philosopher.base-port:8080}") int basePort,
+            @Value("${philosopher.count:5}") int philosopherCount,
+            @Value("${philosopher.autostart:true}") boolean autostart,
             @Value("${monitor.url}") String monitorUrl,
             @Value("${supervisor.url}") String supervisorUrl,
             RestTemplate restTemplate) {
-        this.philosopherId = philosopherId;
+        this.philosopherId = idFromPort(configuredId, serverPort, basePort);
+        this.autostart = autostart;
         this.monitorUrl = monitorUrl;
         this.restTemplate = restTemplate;
         this.supervisorUrl = supervisorUrl;
         this.leftFork = philosopherId;
-        this.rightFork = (philosopherId % 5) + 1;
+        this.rightFork = (philosopherId % philosopherCount) + 1;
+    }
+
+    private static int idFromPort(int configuredId, int serverPort, int basePort) {
+        return configuredId > 0 ? configuredId : serverPort - basePort;
     }
 
     @Override
     public void run(String... args) {
+        if (!autostart) return;
         new Thread(() -> {
             try {
                 while (true) {
-
-                    sendEvent("THINKING");
-                    Thread.sleep((long) (Math.random() * 2000 + 1000));
+                    think();
 
                     sendEvent("HUNGRY");
 
@@ -46,12 +55,9 @@ public class PhilosopherRunner implements CommandLineRunner {
                     System.out.println("Droite");
                     eat(rightFork);
 
-
-
                     sendEvent("EATING");
                     Thread.sleep((long) (Math.random() * 2000 + 1000));
 
-                    // Libérer les fourchettes
                     restTemplate.postForObject(supervisorUrl + "/fork/" + leftFork + "/release?philosopherId=" + philosopherId, null, Void.class);
                     restTemplate.postForObject(supervisorUrl + "/fork/" + rightFork + "/release?philosopherId=" + philosopherId, null, Void.class);
 
@@ -61,6 +67,10 @@ public class PhilosopherRunner implements CommandLineRunner {
                 Thread.currentThread().interrupt();
             }
         }).start();
+    }
+
+    private void think() throws InterruptedException {
+        Thread.sleep((long) (Math.random() * 2000 + 1000));
     }
 
     private synchronized void sendEvent(String state) {
