@@ -10,33 +10,38 @@ public class PhilosopherRunner implements CommandLineRunner {
 
     private final int philosopherId;
     private final String monitorUrl;
+    private final boolean autostart;
     private final RestTemplate restTemplate;
 
     private int logicalClock = 0;
 
     public PhilosopherRunner(
-            @Value("${philosopher.id}") int philosopherId,
+            @Value("${philosopher.id:0}") int configuredId,
+            @Value("${server.port:8081}") int serverPort,
+            @Value("${philosopher.base-port:8080}") int basePort,
+            @Value("${philosopher.autostart:true}") boolean autostart,
             @Value("${monitor.url}") String monitorUrl,
             RestTemplate restTemplate) {
-        this.philosopherId = philosopherId;
+        this.philosopherId = idFromPort(configuredId, serverPort, basePort);
+        this.autostart = autostart;
         this.monitorUrl = monitorUrl;
         this.restTemplate = restTemplate;
     }
 
+    private static int idFromPort(int configuredId, int serverPort, int basePort) {
+        return configuredId > 0 ? configuredId : serverPort - basePort;
+    }
+
     @Override
     public void run(String... args) {
+        if (!autostart) return;
         new Thread(() -> {
             try {
                 while (true) {
-
-                    sendEvent("THINKING");
-                    Thread.sleep((long) (Math.random() * 2000 + 1000));
-
+                    think();
                     sendEvent("HUNGRY");
-
                     sendEvent("EATING");
-                    Thread.sleep((long) (Math.random() * 2000 + 1000));
-
+                    eat();
                     sendEvent("DONE");
                 }
             } catch (InterruptedException e) {
@@ -45,6 +50,13 @@ public class PhilosopherRunner implements CommandLineRunner {
         }).start();
     }
 
+    private void think() throws InterruptedException {
+        Thread.sleep((long) (Math.random() * 2000 + 1000));
+    }
+
+    private void eat() throws InterruptedException {
+        Thread.sleep((long) (Math.random() * 2000 + 1000));
+    }
 
     private synchronized void sendEvent(String state) {
         logicalClock++;

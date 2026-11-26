@@ -4,3 +4,4 @@ target/
 desktop.ini
 .DS_Store
 *.log
+logs/
