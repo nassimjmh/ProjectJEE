@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Moniteur des philosophes</title>
+</head>
+<body>
+<h1>Moniteur des philosophes</h1>
+<p id="status">Connexion...</p>
+
+<h2>État actuel</h2>
+<table border="1" cellpadding="4">
+  <thead><tr><th>Philosophe</th><th>État</th><th>Repas</th><th>Horloge</th></tr></thead>
+  <tbody id="philosophers"></tbody>
+</table>
+
+<h2>Derniers événements</h2>
+<table border="1" cellpadding="4">
+  <thead><tr><th>Philosophe</th><th>État</th><th>Horloge</th></tr></thead>
+  <tbody id="events"></tbody>
+</table>
+
+<script>
+async function refresh() {
+  const status = document.getElementById("status");
+  try {
+    const data = await (await fetch("/api/monitor/state")).json();
+    document.getElementById("philosophers").innerHTML = data.philosophers.map(p =>
+      "<tr><td>" + p.id + "</td><td>" + (p.state === "DONE" ? "DONE (pense)" : p.state) + "</td><td>" + p.meals + "</td><td>" + p.logicalClock + "</td></tr>").join("");
+    document.getElementById("events").innerHTML = data.recent.map(e =>
+      "<tr><td>" + e.philosopherId + "</td><td>" + e.state + "</td><td>" + e.logicalClock + "</td></tr>").join("");
+    status.textContent = data.totalEvents + " événements reçus (mise à jour chaque seconde)";
+  } catch (err) {
+    status.textContent = "Moniteur injoignable : " + err.message;
+  }
+}
+refresh();
+setInterval(refresh, 1000);
+</script>
+</body>
+</html>
